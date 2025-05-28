@@ -6,6 +6,7 @@ const Register = () => {
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
     const [role, setRole] = useState("user");
+    const [error, setError] = useState("");
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -27,6 +28,7 @@ const Register = () => {
             navigate("/");
         } else {
             const errorData = await response.json();
+            setError(errorData.error);
             console.error("Registration failed:", errorData);
         }
     };
@@ -100,6 +102,9 @@ const Register = () => {
                     >
                         Register
                     </button>
+                    {error && (
+                    <p className="mb-2 text-xs text-red-600 text-center">{error}</p>
+                )}
                 </form>
                 <div className="mt-3 text-center">
                     <p className="text-gray-600 text-xs">

@@ -274,6 +274,10 @@ const HomeAdmin = () => {
                       <FiUser className="mr-1" />
                       Advisor: {club.advisor_name}
                     </div>
+                    <div className="mt-2 text-sm text-gray-500 flex items-center">
+                      <FiUsers className="mr-1" />
+                      Created By: {club.created_by}
+                    </div>
                     <div className="mt-4 flex gap-2">
                       <button
                         onClick={() => handleEditClick(club)}
@@ -325,7 +329,7 @@ const HomeAdmin = () => {
                         </div>
                         <div className="ml-3">
                           <p className="text-sm font-semibold text-gray-800">{member.student_username}</p>
-                          <p className="text-xs text-gray-500">{member.signup_date}</p>
+                          <p className="text-xs text-gray-500"><span className="text-sm font-semibold text-gray-800">Signed Up at : </span>{member.signup_date}</p>
                         </div>
                       </div>
                     ))
