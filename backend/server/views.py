@@ -7,44 +7,60 @@ from django.utils.timezone import now
 from .models import Club, User, Member
 import requests
 from django.conf import settings
-from django.contrib.auth import authenticate
 from django.contrib.auth import get_user_model
 User = get_user_model()
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.generics import CreateAPIView
+from .serializers import ClubSerializers
 
+# @api_view(["POST"])
+# @authentication_classes([OAuth2Authentication])
+# @permission_classes([IsAuthenticated])
+# def create_club(request):
+#     if not request.user.is_staff:
+#         return JsonResponse({'error': 'Only admins can create clubs.'}, status=403)
 
-# -------------------- Admin: Create Club --------------------
-@api_view(["POST"])
-@authentication_classes([OAuth2Authentication])
-@permission_classes([IsAuthenticated])
-def create_club(request):
-    if not request.user.is_staff:
-        return JsonResponse({'error': 'Only admins can create clubs.'}, status=403)
+#     data = request.data
+#     name = data.get('name')
+#     description = data.get('description')
+#     advisor_name = data.get('advisor_name')
+#     created_by = request.user
 
-    data = request.data
-    name = data.get('name')
-    description = data.get('description')
-    advisor_name = data.get('advisor_name')
-    created_by = request.user
+#     if not name or not description or not advisor_name:
+#         return JsonResponse({'error': 'All fields are required.'}, status=400)
 
-    if not name or not description or not advisor_name:
-        return JsonResponse({'error': 'All fields are required.'}, status=400)
+#     club = Club.objects.create(
+#         name=name,
+#         description=description,
+#         advisor_name=advisor_name,
+#         created_by=created_by
+#     )
 
-    club = Club.objects.create(
-        name=name,
-        description=description,
-        advisor_name=advisor_name,
-        created_by=created_by
-    )
+#     return JsonResponse({
+#         'id': club.id,
+#         'name': club.name,
+#         'description': club.description,
+#         'advisor_name': club.advisor_name,
+#         'created_by': club.created_by.username
+#     }, status=201)
 
-    return JsonResponse({
-        'id': club.id,
-        'name': club.name,
-        'description': club.description,
-        'advisor_name': club.advisor_name,
-        'created_by': club.created_by.username
-    }, status=201)
+from rest_framework.viewsets import ModelViewSet
 
-# -------------------- Admin: Edit Club --------------------
+# class Club(ModelViewSet):
+#     queryset = Club.objects.all()
+#     serializer_class = ClubSerializers
+#     permission_classes = [AllowAny]
+  
+
+class CreateClub(CreateAPIView):
+    serializer_class = ClubSerializers
+
+    class meta:
+        model = Club
+        fields = ['name', 'description', 'advisor_name','created_by']
+
+    
+
 @api_view(["PUT"])
 @authentication_classes([OAuth2Authentication])
 @permission_classes([IsAuthenticated])
@@ -65,7 +81,6 @@ def edit_club(request, id):
 
     return JsonResponse({'message': 'Club updated successfully.'})
 
-# -------------------- Admin: Delete Club --------------------
 @api_view(["DELETE"])
 @authentication_classes([OAuth2Authentication])
 @permission_classes([IsAuthenticated])
@@ -81,7 +96,6 @@ def delete_club(request, id):
     club.delete()
     return JsonResponse({'message': 'Club deleted successfully.'}, status=204)
 
-# -------------------- Admin: View Members --------------------
 @api_view(["GET"])
 @authentication_classes([OAuth2Authentication])
 @permission_classes([IsAuthenticated])
@@ -106,12 +120,14 @@ def view_members(request, id):
     ]
     return JsonResponse(data, safe=False)
 
-# -------------------- Student: Browse All Clubs --------------------
 @api_view(["GET"])
 @authentication_classes([OAuth2Authentication])
 @permission_classes([IsAuthenticated])
 def list_clubs(request):
     clubs = Club.objects.all()
+    paginator = PageNumberPagination()
+    paginator.page_size = 4
+    paginated_clubs = paginator.paginate_queryset(clubs, request)
     data = [
         {
             'id': c.id,
@@ -120,11 +136,10 @@ def list_clubs(request):
             'advisor_name': c.advisor_name,
             'created_by': c.created_by.username
         }
-        for c in clubs
+        for c in paginated_clubs
     ]
-    return JsonResponse(data, safe=False)
+    return paginator.get_paginated_response(data)
 
-# -------------------- Student: Join Club --------------------
 @api_view(["POST"])
 @authentication_classes([OAuth2Authentication])
 @permission_classes([IsAuthenticated])
@@ -140,7 +155,7 @@ def join_club(request, id):
     member = Member.objects.create(club=club, student=request.user, signup_date=now())
     return JsonResponse({'message': 'Joined the club!', 'club_id': club.id})
 
-# -------------------- Student: View Joined Clubs --------------------
+
 @api_view(["GET"])
 @authentication_classes([OAuth2Authentication])
 @permission_classes([IsAuthenticated])
@@ -157,7 +172,6 @@ def my_clubs(request):
     ]
     return JsonResponse(data, safe=False)
 
-# -------------------- Student: Leave Club --------------------
 @api_view(["DELETE"])
 @authentication_classes([OAuth2Authentication])
 @permission_classes([IsAuthenticated])

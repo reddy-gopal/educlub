@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Register = () => {
     const [username, setUsername] = useState("");
@@ -34,84 +34,124 @@ const Register = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-100 via-blue-100 to-indigo-100 w-screen">
-            <div className="bg-white shadow-lg border border-indigo-100 rounded-xl px-3 py-5  w-[250px] flex flex-col items-center justify-center transition-all duration-300">
-                <img
-                    src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-                    alt="Register"
-                    className="w-10 h-10 mb-1"
-                />
-                <h2 className="text-lg font-bold text-center text-indigo-700 mb-1">Create Account</h2>
-                <p className="text-gray-500 text-center mb-3 text-xs">Join EduClub and start your journey!</p>
-                <form onSubmit={handleSubmit} className="space-y-2 w-full">
-                    <div className="flex flex-col items-center gap-2 mb-3">
-                    <input
-                        type="text"
-                        placeholder="Username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                        className="w-[70%] px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400 text-xs"
-                    />
-                    <input
-                        type="password"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        className="w-[70%] px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400 text-xs"
-                    />
-                    <input
-                        type="email"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        className="w-[70%] px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400 text-xs"
-                    />
+        <div className="min-h-screen w-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-indigo-50">
+            <div className="bg-white shadow-xl rounded-xl px-10 py-12 w-full max-w-md mx-4 border border-gray-100">
+                <div className="text-center mb-10">
+                    <div className="mx-auto bg-indigo-100 w-16 h-16 rounded-full flex items-center justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                        </svg>
                     </div>
+                    <h2 className="text-3xl font-bold text-gray-800">Create Account</h2>
+                    <p className="text-gray-500 mt-2">Join EduClub and start your journey!</p>
+                </div>
 
-                    <div className="flex items-center justify-center gap-3 mt-1">
-                        <label className="flex items-center space-x-1 text-xs">
-                            <input
-                                type="radio"
-                                name="role"
-                                value="user"
-                                checked={role === "user"}
-                                onChange={() => setRole("user")}
-                                className="accent-indigo-600"
-                            />
-                            <span>User</span>
-                        </label>
-                        <label className="flex items-center space-x-1 text-xs">
-                            <input
-                                type="radio"
-                                name="role"
-                                value="admin"
-                                checked={role === "admin"}
-                                onChange={() => setRole("admin")}
-                                className="accent-indigo-600"
-                            />
-                            <span>Admin</span>
-                        </label>
+                {error && (
+                    <div className="mb-6 p-3 bg-red-50 text-red-700 text-sm rounded-lg text-center border border-red-100 animate-fade-in">
+                        {error}
                     </div>
+                )}
 
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    <div>
+                        <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
+                            Username
+                        </label>
+                        <input
+                            id="username"
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                            placeholder="Enter your username"
+                        />
+                    </div>
+                    
+                    <div>
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                            Email
+                        </label>
+                        <input
+                            id="email"
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                            placeholder="Enter your email"
+                        />
+                    </div>
+                    
+                    <div>
+                        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                            Password
+                        </label>
+                        <input
+                            id="password"
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                            placeholder="Create a password"
+                        />
+                    </div>
+                    
+                    <div className="pt-2">
+                        <label className="block text-sm font-medium text-gray-700 mb-3">
+                            Account Type
+                        </label>
+                        <div className="flex gap-4">
+                            <label className="flex-1 cursor-pointer">
+                                <input
+                                    type="radio"
+                                    name="role"
+                                    value="user"
+                                    checked={role === "user"}
+                                    onChange={() => setRole("user")}
+                                    className="sr-only peer"
+                                />
+                                <div className={`p-3 rounded-lg border-2 text-center transition-all duration-300 peer-checked:border-indigo-500 peer-checked:bg-indigo-50 peer-checked:ring-2 peer-checked:ring-indigo-200 ${role === "user" ? "border-indigo-500 bg-indigo-50 ring-2 ring-indigo-200" : "border-gray-300"}`}>
+                                    <div className="font-medium text-gray-800">User</div>
+                                    <div className="text-xs text-gray-500 mt-1">Standard account</div>
+                                </div>
+                            </label>
+                            
+                            <label className="flex-1 cursor-pointer">
+                                <input
+                                    type="radio"
+                                    name="role"
+                                    value="admin"
+                                    checked={role === "admin"}
+                                    onChange={() => setRole("admin")}
+                                    className="sr-only peer"
+                                />
+                                <div className={`p-3 rounded-lg border-2 text-center transition-all duration-300 peer-checked:border-indigo-500 peer-checked:bg-indigo-50 peer-checked:ring-2 peer-checked:ring-indigo-200 ${role === "admin" ? "border-indigo-500 bg-indigo-50 ring-2 ring-indigo-200" : "border-gray-300"}`}>
+                                    <div className="font-medium text-gray-800">Admin</div>
+                                    <div className="text-xs text-gray-500 mt-1">Administrator</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    
                     <button
                         type="submit"
-                        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-1 rounded text-xs transition mt-1"
+                        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 rounded-lg transition-all duration-300 transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 shadow-md hover:shadow-lg"
                     >
-                        Register
+                        Create Account
                     </button>
-                    {error && (
-                    <p className="mb-2 text-xs text-red-600 text-center">{error}</p>
-                )}
                 </form>
-                <div className="mt-3 text-center">
-                    <p className="text-gray-600 text-xs">
+
+                <div className="mt-8 text-center">
+                    <p className="text-sm text-gray-600">
                         Already have an account?{" "}
-                        <a href="/" className="text-indigo-600 hover:underline font-medium">
-                            Login
-                        </a>
+                        <Link
+                            to="/"
+                            className="font-medium text-indigo-600 hover:text-indigo-800 transition-colors underline-offset-2 hover:underline"
+                        >
+                            Sign in
+                        </Link>
                     </p>
                 </div>
             </div>
