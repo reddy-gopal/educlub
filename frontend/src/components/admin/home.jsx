@@ -22,7 +22,7 @@ const HomeAdmin = () => {
     }
 
     try {
-      const response = await fetch(`http://127.0.0.1:8000/clubs/?page=${page}`, {
+      const response = await fetch(`https://gopal123.pythonanywhere.com/clubs/?page=${page}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -33,9 +33,11 @@ const HomeAdmin = () => {
         return;
       }
 
-      const data = await response.json();
-      setClubs(data.results);
-      setTotalPages(Math.ceil(data.count / 4)); 
+      
+const data = await response.json();
+setClubs(Array.isArray(data.results) ? data.results : (Array.isArray(data) ? data : []));
+setTotalPages(Math.ceil((data.count || (Array.isArray(data) ? data.length : 0)) / 4));
+
     } catch (error) {
       console.error("Error fetching clubs:", error);
       navigate("/");
@@ -49,7 +51,7 @@ const HomeAdmin = () => {
   const handleCreateClub = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://127.0.0.1:8000/clubs/create/", {
+      const response = await fetch("https://gopal123.pythonanywhere.com/clubs/create/", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -79,7 +81,7 @@ const HomeAdmin = () => {
     if (!editingClubId) return;
 
     try {
-      const response = await fetch(`http://127.0.0.1:8000/clubs/${editingClubId}/edit/`, {
+      const response = await fetch(`https://gopal123.pythonanywhere.com/clubs/${editingClubId}/edit/`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -110,7 +112,7 @@ const HomeAdmin = () => {
     if (!window.confirm("Are you sure you want to delete this club?")) return;
 
     try {
-      const response = await fetch(`http://127.0.0.1:8000/clubs/${clubId}/delete/`, {
+      const response = await fetch(`https://gopal123.pythonanywhere.com/http://127.0.0.1:8000/clubs/${clubId}/delete/`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -131,7 +133,7 @@ const HomeAdmin = () => {
 
   const list_members = async (clubId) => {
     try {
-      const response = await fetch(`http://127.0.0.1:8000/clubs/${clubId}/members/`, {
+      const response = await fetch(`https://gopal123.pythonanywhere.com/clubs/${clubId}/members/`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

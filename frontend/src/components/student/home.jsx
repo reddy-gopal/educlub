@@ -33,7 +33,7 @@ const Home = () => {
     }
 
     try {
-      const clubsRes = await fetch(`http://127.0.0.1:8000/clubs/?page=${page}`, {
+      const clubsRes = await fetch(`https://gopal123.pythonanywhere.com/clubs/?page=${page}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -41,10 +41,10 @@ const Home = () => {
 
       const clubsData = await clubsRes.json();
       console.log("Fetched clubs:", clubsData);
-      setClubs(clubsData.results || []);
+      setClubs(Array.isArray(clubsData) ? clubsData : clubsData.results || []);
       setTotalPages(Math.ceil(clubsData.count / 4)); // Assuming 4 items per page as per backend
 
-      const joinedRes = await fetch("http://127.0.0.1:8000/user/clubs/", {
+      const joinedRes = await fetch("https://gopal123.pythonanywhere.com/user/clubs/", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -74,7 +74,7 @@ const Home = () => {
     if (!token) return navigate("/");
 
     try {
-      const res = await fetch(`http://127.0.0.1:8000/clubs/${clubId}/join/`, {
+      const res = await fetch(`https://gopal123.pythonanywhere.com/clubs/${clubId}/join/`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -99,7 +99,7 @@ const Home = () => {
     if (!token) return navigate("/");
 
     try {
-      const res = await fetch(`http://127.0.0.1:8000/clubs/${clubId}/leave/`, {
+      const res = await fetch(`https://gopal123.pythonanywhere.com/clubs/${clubId}/leave/`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
